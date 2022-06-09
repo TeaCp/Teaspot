@@ -24,7 +24,7 @@
 
         public int getLength () => 
             Convert.ToInt32(Math.Sqrt(this.Coords.X*this.Coords.X + this.Coords.Y*this.Coords.Y));
-        public static int getAngleBetween (Vector left, Vector right) =>
-            (left.Coords.X*right.Coords.X + left.Coords.Y*right.Coords.Y) / (left.getLength() * right.getLength());
+        public static double getAngleBetween (Vector left, Vector right) =>
+            Math.Acos(left.Coords.X*right.Coords.X + left.Coords.Y*right.Coords.Y) / (left.getLength() * right.getLength());
     }
 }
