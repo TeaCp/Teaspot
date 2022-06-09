@@ -13,6 +13,7 @@ namespace Teaspot.Core
         public GameObject(string name)
         {
             Name = name;
+            AddComponent<Transform>();
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace Teaspot.Core
         /// <summary>
         /// Returns a single <see cref="Component"/> that matches the specified <see cref="Type"/>.
         /// </summary>
-        /// <param name="type">The Type to match the Components with.</param
+        /// <param name="type">The Type to match the Components with.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public Component GetComponent(Type type)
@@ -136,6 +137,24 @@ namespace Teaspot.Core
                 "Specified Component '{0}' is not a part of the GameObject '{1}'",
                 type.GetType(),
                 Name));
+        }
+
+        /// <summary>
+        /// Gets the single <see cref="Component"/> that matches the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">The specified type of Component</typeparam>
+        /// <returns><see cref="true"/> if the <see cref="GameObject"/> contains the Component with the specified type; otherwise, <see cref="false"/></returns>
+        public bool TryGetComponent<T>(out Component component) where T : Component
+        {
+            return components.TryGetValue(typeof(T), out component);
+        }
+        /// <summary>
+        /// Gets the single <see cref="Component"/> that matches the specified <see cref="Type"/>.
+        /// </summary>
+        /// <returns><see cref="true"/> if the <see cref="GameObject"/> contains the Component with the specified type; otherwise, <see cref="false"/></returns>
+        public bool TryGetComponent(Type type, out Component component)
+        {
+            return components.TryGetValue(type, out component);
         }
 
     }

@@ -67,4 +67,22 @@ namespace Teaspot.Core
             return new Transform(this);
         }
     }
+
+    public class Sprite : Component
+    {
+        public string? SpritePath { get; set; }
+
+        public Sprite()
+        {
+        }
+        public Sprite(Sprite another)
+        {
+            this.SpritePath = another.SpritePath;
+        }
+
+        public override Sprite Clone()
+        {
+            return new Sprite(this);
+        }
+    }
 }
