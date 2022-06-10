@@ -9,7 +9,7 @@ namespace Teaspot.Core
         /// Return time in seconds for last frame drawn
         /// </summary>
         public static float DeltaTime => Window.Window.UpdateTime;
-        public static float Fixed
+        public static int FixedTime
         {
             get => Window.Window.FixedTime;
             set

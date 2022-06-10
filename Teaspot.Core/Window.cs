@@ -16,11 +16,7 @@ namespace Teaspot.Core.Window
         public event EventHandler FixedUpdate;
 
         internal static float UpdateTime => Raylib.GetFrameTime();
-        internal static float FixedTime
-        {
-            get => Raylib.GetFrameTime();
-            set { }
-        }
+        internal static int FixedTime { get; set; } = 500;
 
         public static bool IsRunning => Raylib.IsWindowReady();
 
