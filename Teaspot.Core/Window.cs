@@ -1,4 +1,6 @@
-﻿using Raylib_cs;
+﻿using System.Numerics;
+using Raylib_cs;
+using Teaspot.Core.Components;
 
 namespace Teaspot.Core.Window
 {
@@ -9,14 +11,21 @@ namespace Teaspot.Core.Window
         public string Title { get; }
         public int TargetFPS { get; }
 
-        public delegate void UpdateHandler();
-        public event UpdateHandler OnUpdate;
-        public event UpdateHandler FixedUpdate;
+        public delegate void EventHandler();
+        public event EventHandler OnUpdate;
+        public event EventHandler FixedUpdate;
 
         internal static float UpdateTime => Raylib.GetFrameTime();
+        internal static float FixedTime
+        {
+            get => Raylib.GetFrameTime();
+            set { }
+        }
+
+        public static bool IsRunning => Raylib.IsWindowReady();
 
         private readonly List<GameObject> objects = new List<GameObject>();
-        private readonly Dictionary<Texture2D, Transform> textures = new();
+        private readonly Dictionary<Texture2D, Components.Transform> textures = new();
 
         public Window(int width, int height, string title, int targetFPS)
         {
@@ -36,13 +45,21 @@ namespace Teaspot.Core.Window
 
             foreach (GameObject obj in objects)
             {
-                try
+                foreach (var compPair in obj.Components)
                 {
-                    Sprite sprite = obj.GetComponent<Sprite>();
-                    Texture2D texture = Raylib.LoadTexture(sprite.SpritePath);
-                    textures.Add(texture, obj.GetComponent<Transform>());
+                    if (compPair.Key.IsSubclassOf(typeof(BehaviorScript)))
+                    {
+                        BehaviorScript script = compPair.Value as BehaviorScript;
+                        script.Init(this);
+                    }
+
+                    if (compPair.Key == typeof(Sprite))
+                    {
+                        Sprite sprite = compPair.Value as Sprite;
+                        Texture2D texture = Raylib.LoadTexture(sprite.SpritePath);
+                        textures.Add(texture, obj.GetComponent<Components.Transform>());
+                    }
                 }
-                catch (ArgumentException) { }
             }
 
             Thread fixedThread = new Thread((object fixedTime) =>
@@ -53,7 +70,7 @@ namespace Teaspot.Core.Window
                     Thread.Sleep((int)fixedTime);
                 }
             });
-            fixedThread.Start(500);
+            fixedThread.Start(FixedTime);
 
             while (!Raylib.WindowShouldClose())
             {
@@ -64,7 +81,11 @@ namespace Teaspot.Core.Window
 
                 foreach (var entry in textures)
                 {
-                    Raylib.DrawTexture(entry.Key, (int)entry.Value.Position.X, (int)entry.Value.Position.Y, Color.RAYWHITE);
+                    Rectangle sourceRec = new(0f,0f,entry.Key.width,entry.Key.height);
+                    Rectangle destRec = new(entry.Value.Position.X, entry.Value.Position.Y, entry.Key.width, entry.Key.height);
+                    Vector2 origin = new(entry.Key.width * entry.Value.Scale.X, entry.Key.height * entry.Value.Scale.Y);
+
+                    Raylib.DrawTexturePro(entry.Key, sourceRec, destRec, origin, entry.Value.Rotation, Color.RAYWHITE);
                 }
 
                 Raylib.DrawText("Hello, world!", 12, 12, 20, Color.BLACK);
@@ -77,16 +98,17 @@ namespace Teaspot.Core.Window
 
         public void AddObject(GameObject obj)
         {
-            if(obj.TryGetComponent<Sprite>(out Component _))
-            {
-                objects.Add(obj);
-            }
-            else
-            {
-                throw new ArgumentException(string.Format(
-                "Specified GameObject '{0}' does not have a sprite component",
-                obj.Name));
-            }
+            objects.Add(obj);
+            //if(obj.TryGetComponent<Sprite>(out Component _))
+            //{
+            //    objects.Add(obj);
+            //}
+            //else
+            //{
+            //    throw new ArgumentException(string.Format(
+            //    "Specified GameObject '{0}' does not have a sprite component",
+            //    obj.Name));
+            //}
         }
 
         public void Dispose()

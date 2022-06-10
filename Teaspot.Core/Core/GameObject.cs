@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using Teaspot.Core.Components;
+using Teaspot.Core.Window;
 
 namespace Teaspot.Core
 {
@@ -8,7 +8,8 @@ namespace Teaspot.Core
 
         public string Name { get; set; }
 
-        private Dictionary<Type, Component> components = new();
+        private readonly Dictionary<Type, Component> components = new();
+        public Dictionary<Type, Component> Components { get { return components; } }
 
         public GameObject(string name)
         {
