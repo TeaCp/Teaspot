@@ -47,13 +47,13 @@ namespace Teaspot.Core
 
     public class Transform : Component
     {
-        public Coordinate Position { get; set; }
+        public Point Position { get; set; }
 
-        public Transform(Coordinate position)
+        public Transform(Point position)
         {
             Position = position;
         }
-        public Transform() : this(new Coordinate(0, 0))
+        public Transform() : this(Point.Zero)
         {
         }
 
