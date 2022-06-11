@@ -52,7 +52,7 @@ namespace Teaspot.Core.Window
                     if (compPair.Key == typeof(Sprite))
                     {
                         Sprite sprite = compPair.Value as Sprite;
-                        Texture2D texture = Raylib.LoadTexture(sprite.SpritePath);
+                        Texture2D texture = Raylib.LoadTexture(sprite.TexturePath);
                         textures.Add(texture, obj.GetComponent<Components.Transform>());
                     }
                 }

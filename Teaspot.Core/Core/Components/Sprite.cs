@@ -3,14 +3,14 @@ namespace Teaspot.Core.Components
 {
     public class Sprite : Component
     {
-        public string? SpritePath { get; set; }
+        public string? TexturePath { get; set; }
 
         public Sprite()
         {
         }
         public Sprite(Sprite another)
         {
-            SpritePath = another.SpritePath;
+            TexturePath = another.TexturePath;
         }
 
         public override Sprite Clone()
