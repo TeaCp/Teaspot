@@ -5,15 +5,17 @@ namespace Teaspot.Core
 {
     public class GameObject
     {
-
         public string Name { get; set; }
 
         private readonly Dictionary<Type, Component> components = new();
         public Dictionary<Type, Component> Components { get { return components; } }
 
-        public GameObject(string name)
+        internal readonly Window.Window scene;
+
+        public GameObject(string name, Window.Window scene)
         {
             Name = name;
+            this.scene = scene;
             AddComponent<Transform>();
         }
 
@@ -41,7 +43,7 @@ namespace Teaspot.Core
         /// <returns>A reference to a Component of the specified Type.</returns>
         public Component AddComponent(string componentName)
         {
-            Type? type = Type.GetType("teaspot." + componentName);
+            Type? type = Type.GetType("teaspot.Core.Components." + componentName);
             if (type == null || !type.GetType().IsSubclassOf(typeof(Component)))
             {
                 throw new IsNotAComponentException(componentName);

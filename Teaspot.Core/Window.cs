@@ -13,6 +13,7 @@ namespace Teaspot.Core.Window
 
         public delegate void EventHandler();
         public event EventHandler OnUpdate;
+        public event EventHandler LateUpdate;
         public event EventHandler FixedUpdate;
 
         internal static float UpdateTime => Raylib.GetFrameTime();
@@ -20,8 +21,8 @@ namespace Teaspot.Core.Window
 
         public static bool IsRunning => Raylib.IsWindowReady();
 
-        private readonly List<GameObject> objects = new List<GameObject>();
-        private readonly Dictionary<Texture2D, Components.Transform> textures = new();
+        private List<GameObject> objects = new List<GameObject>();
+        private List<Sprite> sprites = new();
 
         public Window(int width, int height, string title, int targetFPS)
         {
@@ -29,9 +30,10 @@ namespace Teaspot.Core.Window
             this.Height = height;
             this.Title = title;
             this.TargetFPS = targetFPS;
-
+            
             OnUpdate += () => { };
             FixedUpdate += () => { };
+            LateUpdate += () => { };
         }
 
         public void Run()
@@ -49,11 +51,11 @@ namespace Teaspot.Core.Window
                         script.Init(this);
                     }
 
-                    if (compPair.Key == typeof(Sprite))
+                    if (compPair.Key == typeof(Sprite) || compPair.Key.IsSubclassOf(typeof(Sprite)))
                     {
                         Sprite sprite = compPair.Value as Sprite;
-                        Texture2D texture = Raylib.LoadTexture(sprite.SpritePath);
-                        textures.Add(texture, obj.GetComponent<Components.Transform>());
+                        sprite.Texture = Raylib.LoadTexture(sprite.SpritePath);
+                        sprites.Add(sprite);
                     }
                 }
             }
@@ -74,19 +76,15 @@ namespace Teaspot.Core.Window
 
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.BLUE);
-
-                foreach (var entry in textures)
+                
+                foreach (Sprite sprite in sprites)
                 {
-                    Rectangle sourceRec = new(0f,0f,entry.Key.width,entry.Key.height);
-                    Rectangle destRec = new(entry.Value.Position.X, entry.Value.Position.Y, entry.Key.width, entry.Key.height);
-                    Vector2 origin = new(entry.Key.width * entry.Value.Scale.X, entry.Key.height * entry.Value.Scale.Y);
-
-                    Raylib.DrawTexturePro(entry.Key, sourceRec, destRec, origin, entry.Value.Rotation, Color.RAYWHITE);
+                    Raylib.DrawTexturePro(sprite.Texture, sprite.SourceRectangle, sprite.DestRectangle, sprite.origin, sprite.objTransform.Rotation, Color.RAYWHITE);
                 }
 
-                Raylib.DrawText("Hello, world!", 12, 12, 20, Color.BLACK);
-
                 Raylib.EndDrawing();
+
+                LateUpdate.Invoke();
             }
             
             Raylib.CloseWindow();
@@ -95,21 +93,16 @@ namespace Teaspot.Core.Window
         public void AddObject(GameObject obj)
         {
             objects.Add(obj);
-            //if(obj.TryGetComponent<Sprite>(out Component _))
-            //{
-            //    objects.Add(obj);
-            //}
-            //else
-            //{
-            //    throw new ArgumentException(string.Format(
-            //    "Specified GameObject '{0}' does not have a sprite component",
-            //    obj.Name));
-            //}
         }
 
         public void Dispose()
         {
             
+        }
+
+        internal Texture2D LoadTexture(string path)
+        {
+            return Raylib.LoadTexture(path);
         }
     }
 }
