@@ -21,6 +21,8 @@ namespace Teaspot.Core.Components
         public Point Scale { get; set; } = new(1, 1);
         public Vector Velocity => new Vector(prevPosition, position);
 
+        public override bool IsActive { get => base.IsActive; set { } }
+
         internal void LateUpdate()
         {
             this.prevPosition = position;
@@ -30,6 +32,7 @@ namespace Teaspot.Core.Components
         {
             this.position = position;
             prevPosition = position;
+            IsActive = true;
         }
         public Transform() : this(Point.Zero)
         {

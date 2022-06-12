@@ -26,12 +26,14 @@ namespace Teaspot.Core.Components
             {
                 objTransform = GameObject.GetComponent<Transform>();
                 spritePath = value;
-                
             }
         }
         public virtual Rectangle SourceRectangle => new(0f, 0f, texture.width * Math.Sign(objTransform.Scale.X), texture.height * Math.Sign(objTransform.Scale.Y));
-        public virtual Rectangle DestRectangle => new(objTransform.Position.X, objTransform.Position.Y, Math.Abs(texture.width * objTransform.Scale.X), Math.Abs(texture.height * objTransform.Scale.Y));
-        public virtual Vector2 origin => new(texture.width, texture.height);
+        public virtual Rectangle DestRectangle
+        {
+            get => IsActive ? new(objTransform.Position.X, objTransform.Position.Y, Math.Abs(texture.width * objTransform.Scale.X), Math.Abs(texture.height * objTransform.Scale.Y)) : new(0f, 0f, 0f, 0f);
+        }
+        public virtual Vector2 Origin => new(texture.width, texture.height);
 
         public Sprite()
         {

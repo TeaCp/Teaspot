@@ -23,6 +23,7 @@ namespace Teaspot.Core.Components
                 }
             }
         }
+        public virtual bool IsActive { get; set; } = true;
 
         /// <summary>
         /// Return the copy of the current <see cref="Component"/>.

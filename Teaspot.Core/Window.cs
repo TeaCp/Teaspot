@@ -85,7 +85,7 @@ namespace Teaspot.Core.Window
                 
                 foreach (Sprite sprite in sprites)
                 {
-                    Raylib.DrawTexturePro(sprite.Texture, sprite.SourceRectangle, sprite.DestRectangle, sprite.origin, sprite.objTransform.Rotation, Color.RAYWHITE);
+                    Raylib.DrawTexturePro(sprite.Texture, sprite.SourceRectangle, sprite.DestRectangle, sprite.Origin, sprite.objTransform.Rotation, Color.RAYWHITE);
                 }
 
                 Raylib.EndDrawing();

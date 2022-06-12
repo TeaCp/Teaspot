@@ -48,7 +48,10 @@ namespace Teaspot.Core.Components
                 return new Rectangle((float)currentFrame * texture.width/FrameCount, 0f, texture.width/ FrameCount * Math.Sign(objTransform.Scale.X), texture.height * Math.Sign(objTransform.Scale.Y));
             }
         }
-        public override Rectangle DestRectangle => new(objTransform.Position.X, objTransform.Position.Y, Math.Abs(texture.width/FrameCount * objTransform.Scale.X), Math.Abs(texture.height * objTransform.Scale.Y));
+        public override Rectangle DestRectangle
+        {
+            get => IsActive ? new(objTransform.Position.X, objTransform.Position.Y, Math.Abs(texture.width / FrameCount * objTransform.Scale.X), Math.Abs(texture.height * objTransform.Scale.Y)) : new(0f, 0f, 0f, 0f);
+        }
 
         public AnimatedSprite()
         {

@@ -6,6 +6,28 @@
         {
         }
 
+        internal void ActiveUpdate()
+        {
+            if (IsActive)
+            {
+                Update();
+            }
+        }
+        internal void ActiveFixedUpdate()
+        {
+            if (IsActive)
+            {
+                FixedUpdate();
+            }
+        }
+        internal void ActiveLateUpdate()
+        {
+            if (IsActive)
+            {
+                LateUpdate();
+            }
+        }
+
         public virtual void Update() { }
         public virtual void FixedUpdate() { }
         public virtual void LateUpdate() { }
@@ -13,9 +35,9 @@
 
         internal void Init(Window.Window scene)
         {
-            scene.OnUpdate += Update;
-            scene.FixedUpdate += FixedUpdate;
-            scene.LateUpdate += LateUpdate;
+            scene.OnUpdate += ActiveUpdate;
+            scene.FixedUpdate += ActiveFixedUpdate;
+            scene.LateUpdate += ActiveLateUpdate;
             Start();
         }
 
