@@ -20,8 +20,7 @@ namespace Teaspot.Core
         }
 
         /// <summary>
-        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this GameObject, if not existing yet.
-        /// Simply uses the existing Component otherwise.
+        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this <see cref="GameObject"/>, if not existing yet.
         /// </summary>
         /// <returns>A reference to a Component of the specified Type.</returns>
         public T AddComponent<T>() where T : Component, new()
@@ -37,8 +36,7 @@ namespace Teaspot.Core
             return newComponent;
         }
         /// <summary>
-        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this GameObject, if not existing yet.
-        /// Simply uses the existing Component otherwise.
+        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this <see cref="GameObject"/>, if not existing yet.
         /// </summary>
         /// <returns>A reference to a Component of the specified Type.</returns>
         public Component AddComponent(string componentName)
@@ -61,8 +59,7 @@ namespace Teaspot.Core
             return newComponent;
         }
         /// <summary>
-        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this GameObject, if not existing yet.
-        /// Simply uses the existing Component otherwise.
+        /// Adds a <see cref="Component"/> of the specified <see cref="Type"/> to this <see cref="GameObject"/>, if not existing yet.
         /// </summary>
         /// <returns>A reference to a Component of the specified Type.</returns>
         public Component AddComponent(Type type)
@@ -83,7 +80,7 @@ namespace Teaspot.Core
             return newComponent;
         }
         /// <summary>
-        /// Adds a <see cref="Component"/> to this GameObject, if not existing yet.
+        /// Adds a <see cref="Component"/> to this <see cref="GameObject"/>, if not existing yet.
         /// Simply uses the existing Component otherwise.
         /// </summary>
         /// <returns>A reference to a Component of the specified Type.</returns>
@@ -160,6 +157,63 @@ namespace Teaspot.Core
             return components.TryGetValue(type, out component);
         }
 
+        /// <summary>
+        /// Remove a <see cref="Component"/> from this <see cref="GameObject"/>.
+        /// </summary>
+        /// <returns>A reference to a Component of the specified Type.</returns>
+        /// <exception cref="ArgumentException"/>
+        public void RemoveComponent<T>() where T : Component
+        {
+            try
+            {
+                components.Remove(typeof(T));
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException(string.Format(
+                    "Specified Component '{0}' is not a part of the GameObject '{1}'",
+                    typeof(T),
+                    Name));
+            }
+        }
+        /// <summary>
+        /// Remove a <see cref="Component"/> from this <see cref="GameObject"/>.
+        /// </summary>
+        /// <returns>A reference to a Component of the specified Type.</returns>
+        /// <exception cref="ArgumentException"/>
+        public void RemoveComponent(Type type)
+        {
+            try
+            {
+                components.Remove(type.GetType());
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException(string.Format(
+                    "Specified Component '{0}' is not a part of the GameObject '{1}'",
+                    type.GetType(),
+                    Name));
+            }
+        }
+        /// <summary>
+        /// Remove a <see cref="Component"/> from this <see cref="GameObject"/>.
+        /// </summary>
+        /// <returns>A reference to a Component of the specified Type.</returns>
+        /// <exception cref="ArgumentException"/>
+        public void RemoveComponent(Component component)
+        {
+            foreach(var entry in components)
+            {
+                if(entry.Value.Equals(component))
+                {
+                    components.Remove(component.GetType());
+                    return;
+                }
+            }
+            throw new ArgumentException(string.Format(
+                "Specified Component is not a part of the GameObject '{0}'",
+                Name));
+        }
     }
 
     public class IsNotAComponentException : Exception
