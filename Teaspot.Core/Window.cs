@@ -45,6 +45,12 @@ namespace Teaspot.Core.Window
             {
                 foreach (var compPair in obj.Components)
                 {
+                    if(compPair.Key == typeof(Components.Transform))
+                    {
+                        Components.Transform transform = compPair.Value as Components.Transform;
+                        LateUpdate += transform.LateUpdate;
+                    }
+
                     if (compPair.Key.IsSubclassOf(typeof(BehaviorScript)))
                     {
                         BehaviorScript script = compPair.Value as BehaviorScript;

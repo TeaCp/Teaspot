@@ -5,11 +5,28 @@ namespace Teaspot.Core.Components
 {
     public class AnimatedSprite : Sprite
     {
-        private int currentFrame = 0;
         private int frameCounter = 0;
+        private int frameSpeed = 8;
+        private bool isRunning = true;
+        private int currentFrame = 0;
 
+        public int CurrentFrame
+        {
+            get => currentFrame;
+            set => currentFrame = value - 1;
+        }
         public int FrameCount { get; set; } = 1;
-        public int FrameSpeed { get; set; } = 8;
+        public int FrameSpeed
+        {
+            get
+            {
+                return isRunning ? frameSpeed : 0;
+            }
+            set
+            {
+                frameSpeed = value;
+            }
+        }
 
             
         public override Rectangle SourceRectangle
@@ -17,7 +34,7 @@ namespace Teaspot.Core.Components
             get
             {
                 frameCounter++;
-                if(frameCounter >= GameObject.scene.TargetFPS / FrameSpeed)
+                if(FrameSpeed != 0 && frameCounter >= GameObject.scene.TargetFPS / FrameSpeed)
                 {
                     frameCounter = 0;
                     currentFrame++;
@@ -44,6 +61,15 @@ namespace Teaspot.Core.Components
         public override AnimatedSprite Clone()
         {
             return new AnimatedSprite(this);
+        }
+
+        public void Start()
+        {
+            isRunning = true;
+        }
+        public void Stop()
+        {
+            isRunning = false;
         }
     }
 }

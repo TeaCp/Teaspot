@@ -19,10 +19,19 @@
         public static Vector operator -(Vector left, Vector right) => left + (-right);
         public static Vector operator *(float multiplier, Vector vector) => new Vector(multiplier * vector.Pos);
         public static Vector operator *(Vector vector, float multiplier) => multiplier * vector;
+        public static bool operator ==(Vector left, Vector right) => left.Pos == right.Pos;
+        public static bool operator !=(Vector left, Vector right) => left.Pos != right.Pos;
 
         public double getLength () => this.Pos.getDistanceToOrigin();
         public static double getScalarProduction (Vector left, Vector right) => left.Pos.X*right.Pos.X + left.Pos.Y*right.Pos.Y;
         public static double getAngleBetween (Vector left, Vector right) =>
             Math.Acos(getScalarProduction(left, right) / (left.getLength() * right.getLength()));
+
+        public static Vector Zero => new Vector(0, 0);
+        public static Vector Right => new Vector(1, 0);
+        public static Vector Left => new Vector(-1, 0);
+        public static Vector Top => new Vector(0, 1);
+        public static Vector Bottom => new Vector(0, -1);
+
     }
 }

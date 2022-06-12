@@ -1,16 +1,35 @@
-﻿
+﻿using Teaspot.Core.Window;
+
+
 namespace Teaspot.Core.Components
 {
     public class Transform : Component
     {
-        public Point Position { get; set; }
+        private Point prevPosition;
+        private Point position;
+
+        public Point Position
+        {
+            get => position;
+            set
+            {
+                prevPosition = position;
+                position = value;
+            }
+        }
         public float Rotation { get; set; } = 0;
         public Point Scale { get; set; } = new(1, 1);
+        public Vector Velocity => new Vector(prevPosition, position);
 
+        internal void LateUpdate()
+        {
+            this.prevPosition = position;
+        }
 
         public Transform(Point position)
         {
-            Position = position;
+            this.position = position;
+            prevPosition = position;
         }
         public Transform() : this(Point.Zero)
         {
@@ -18,7 +37,7 @@ namespace Teaspot.Core.Components
 
         protected Transform(Transform another)
         {
-            Position = another.Position;
+            this.position = another.Position;
         }
 
         public override Transform Clone()

@@ -17,6 +17,8 @@ namespace Teaspot.Core
         public static Point operator *(float multiplier, Point point) => 
             new Point(multiplier * point.X, multiplier * point.Y);
         public static Point operator *(Point point, float multiplier) => multiplier * point;
+        public static bool operator ==(Point left, Point right) => left.X == right.X && left.Y == right.Y;
+        public static bool operator !=(Point left, Point right) => left.X != right.X && left.Y != right.Y;
         
         public double getDistanceToOrigin () => Math.Sqrt(this.X*this.X + this.Y*this.Y);
         public static double getDistanceBetween (Point left, Point right) => new Point(left - right).getDistanceToOrigin();
