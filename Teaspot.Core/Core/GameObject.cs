@@ -10,12 +10,11 @@ namespace Teaspot.Core
         private readonly Dictionary<Type, Component> components = new();
         public Dictionary<Type, Component> Components { get { return components; } }
 
-        internal readonly Window.Window scene;
+        internal Window.Window? scene;
 
-        public GameObject(string name, Window.Window scene)
+        public GameObject(string name)
         {
             Name = name;
-            this.scene = scene;
             AddComponent<Transform>();
         }
 

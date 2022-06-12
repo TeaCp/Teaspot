@@ -98,6 +98,7 @@ namespace Teaspot.Core.Window
 
         public void AddObject(GameObject obj)
         {
+            obj.scene = this;
             objects.Add(obj);
         }
 
