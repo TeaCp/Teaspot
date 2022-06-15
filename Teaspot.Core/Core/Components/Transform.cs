@@ -1,4 +1,4 @@
-﻿using Teaspot.Core.Window;
+﻿using Teaspot.Core.Windowing;
 
 
 namespace Teaspot.Core.Components
@@ -23,7 +23,7 @@ namespace Teaspot.Core.Components
 
         public override bool IsActive { get => base.IsActive; set { } }
 
-        internal void LateUpdate()
+        internal override void OnLateUpdate()
         {
             this.prevPosition = position;
         }

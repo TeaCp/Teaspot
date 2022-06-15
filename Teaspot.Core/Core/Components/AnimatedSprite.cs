@@ -34,7 +34,7 @@ namespace Teaspot.Core.Components
             get
             {
                 frameCounter++;
-                if(FrameSpeed != 0 && frameCounter >= GameObject.scene.TargetFPS / FrameSpeed)
+                if(FrameSpeed != 0 && frameCounter >= GameObject.scene.WindowTargetFPS / FrameSpeed)
                 {
                     frameCounter = 0;
                     currentFrame++;

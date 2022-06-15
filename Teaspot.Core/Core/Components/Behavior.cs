@@ -33,7 +33,7 @@
         public virtual void LateUpdate() { }
         public virtual void Start() { }
 
-        internal void Init(Window.Window scene)
+        internal void Init(Windowing.Window scene)
         {
             scene.OnUpdate += ActiveUpdate;
             scene.FixedUpdate += ActiveFixedUpdate;

@@ -25,11 +25,7 @@ namespace Teaspot.Core.Components
         }
         public virtual bool IsActive { get; set; } = true;
 
-        /// <summary>
-        /// Return the copy of the current <see cref="Component"/>.
-        /// </summary>
-        /// <returns></returns>
-        public abstract object Clone();
+        
 
         public Component()
         {
@@ -40,5 +36,13 @@ namespace Teaspot.Core.Components
         {
             gameObject = another.GameObject;
         }
+
+        internal virtual void OnLateUpdate() { }
+
+        /// <summary>
+        /// Return the copy of the current <see cref="Component"/>.
+        /// </summary>
+        /// <returns></returns
+        public abstract object Clone();
     }
 }

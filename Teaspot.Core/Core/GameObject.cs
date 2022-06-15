@@ -1,5 +1,5 @@
 ﻿using Teaspot.Core.Components;
-using Teaspot.Core.Window;
+using Teaspot.Core.Windowing;
 
 namespace Teaspot.Core
 {
@@ -10,7 +10,7 @@ namespace Teaspot.Core
         private readonly Dictionary<Type, Component> components = new();
         public Dictionary<Type, Component> Components { get { return components; } }
 
-        internal Window.Window? scene;
+        internal Scene? scene;
 
         public GameObject(string name)
         {

@@ -2,7 +2,7 @@
 using Raylib_cs;
 using Teaspot.Core.Components;
 
-namespace Teaspot.Core.Window
+namespace Teaspot.Core.Windowing
 {
     public class Window : IDisposable
     {
@@ -21,15 +21,17 @@ namespace Teaspot.Core.Window
 
         public static bool IsRunning => Raylib.IsWindowReady();
 
-        private List<GameObject> objects = new List<GameObject>();
-        private List<Sprite> sprites = new();
+        private Scene scene;
 
-        public Window(int width, int height, string title, int targetFPS)
+        public Window(int width, int height, string title, int targetFPS, Scene scene)
         {
             this.Width = width;
             this.Height = height;
             this.Title = title;
             this.TargetFPS = targetFPS;
+            this.scene = scene;
+
+            scene.Window = this;
             
             OnUpdate += () => { };
             FixedUpdate += () => { };
@@ -41,30 +43,7 @@ namespace Teaspot.Core.Window
             Raylib.InitWindow(Width, Height, Title);
             Raylib.SetTargetFPS(TargetFPS);
 
-            foreach (GameObject obj in objects)
-            {
-                foreach (var compPair in obj.Components)
-                {
-                    if(compPair.Key == typeof(Components.Transform))
-                    {
-                        Components.Transform transform = compPair.Value as Components.Transform;
-                        LateUpdate += transform.LateUpdate;
-                    }
-
-                    if (compPair.Key.IsSubclassOf(typeof(BehaviorScript)))
-                    {
-                        BehaviorScript script = compPair.Value as BehaviorScript;
-                        script.Init(this);
-                    }
-
-                    if (compPair.Key == typeof(Sprite) || compPair.Key.IsSubclassOf(typeof(Sprite)))
-                    {
-                        Sprite sprite = compPair.Value as Sprite;
-                        sprite.Texture = Raylib.LoadTexture(sprite.SpritePath);
-                        sprites.Add(sprite);
-                    }
-                }
-            }
+            scene.Init();
 
             Thread fixedThread = new Thread((object fixedTime) =>
             {
@@ -83,7 +62,7 @@ namespace Teaspot.Core.Window
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.BLUE);
                 
-                foreach (Sprite sprite in sprites)
+                foreach (Sprite sprite in scene.sprites)
                 {
                     Raylib.DrawTexturePro(sprite.Texture, sprite.SourceRectangle, sprite.DestRectangle, sprite.Origin, sprite.objTransform.Rotation, Color.RAYWHITE);
                 }
@@ -96,20 +75,22 @@ namespace Teaspot.Core.Window
             Raylib.CloseWindow();
         }
 
-        public void AddObject(GameObject obj)
+        public async void LoadSceneAsync(Scene scene)
         {
-            obj.scene = this;
-            objects.Add(obj);
+            scene.Window = this;
+            await scene.InitAsync();
+            this.scene = scene;
+        }
+        public void LoadScene(Scene scene)
+        {
+            scene.Window = this;
+            scene.Init();
+            this.scene = scene;
         }
 
         public void Dispose()
         {
-            
-        }
 
-        internal Texture2D LoadTexture(string path)
-        {
-            return Raylib.LoadTexture(path);
         }
     }
 }

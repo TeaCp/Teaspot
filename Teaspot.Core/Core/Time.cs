@@ -1,5 +1,5 @@
 ﻿using Teaspot;
-using Teaspot.Core.Window;
+using Teaspot.Core.Windowing;
 
 namespace Teaspot.Core
 {
@@ -8,17 +8,17 @@ namespace Teaspot.Core
         /// <summary>
         /// Return time in seconds for last frame drawn
         /// </summary>
-        public static float DeltaTime => Window.Window.UpdateTime;
+        public static float DeltaTime => Windowing.Window.UpdateTime;
         public static int FixedTime
         {
-            get => Window.Window.FixedTime;
+            get => Windowing.Window.FixedTime;
             set
             {
-                if (Window.Window.IsRunning)
+                if (Windowing.Window.IsRunning)
                 {
                     throw new NotSupportedException("Cannot change FixedTime value when window already running");
                 }
-                Window.Window.FixedTime = value;
+                Windowing.Window.FixedTime = value;
             }
         }
     }
