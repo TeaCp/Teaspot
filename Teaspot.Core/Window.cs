@@ -50,6 +50,18 @@ namespace Teaspot.Core.Windowing
                 while (!Raylib.WindowShouldClose())
                 {
                     FixedUpdate.Invoke();
+
+                    if (scene.rigidbodies.Count > 1)
+                    {
+                        for (int i = 0; i < scene.rigidbodies.Count; i++)
+                        {
+                            for (int k = i + 1; k < scene.rigidbodies.Count; k++)
+                            {
+                                scene.rigidbodies[i].CheckCollisionWith(scene.rigidbodies[k]);
+                            }
+                        }
+                    }
+
                     Thread.Sleep((int)fixedTime);
                 }
             });

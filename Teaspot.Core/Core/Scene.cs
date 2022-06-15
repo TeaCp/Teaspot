@@ -8,7 +8,8 @@ namespace Teaspot.Core
     public class Scene
     {
         private Window? window;
-        internal List<GameObject> objects = new List<GameObject>();
+        internal List<GameObject> objects = new();
+        internal List<Rigidbody> rigidbodies = new();
         internal List<Sprite> sprites = new();
 
         public string Name { get; set; }
@@ -41,6 +42,11 @@ namespace Teaspot.Core
                     {
                         BehaviorScript script = compPair.Value as BehaviorScript;
                         script.Init(window);
+                    }
+
+                    if (compPair.Key == typeof(Rigidbody))
+                    {
+                        rigidbodies.Add(compPair.Value as Rigidbody);
                     }
 
                     if (compPair.Key == typeof(Sprite) || compPair.Key.IsSubclassOf(typeof(Sprite)))

@@ -28,8 +28,8 @@ namespace Teaspot.Core.Components
             }
         }
 
-            
-        public override Rectangle SourceRectangle
+
+        internal override Rectangle SourceRectangle
         {
             get
             {
@@ -48,10 +48,12 @@ namespace Teaspot.Core.Components
                 return new Rectangle((float)currentFrame * texture.width/FrameCount, 0f, texture.width/ FrameCount * Math.Sign(objTransform.Scale.X), texture.height * Math.Sign(objTransform.Scale.Y));
             }
         }
-        public override Rectangle DestRectangle
+        internal override Rectangle DestRectangle
         {
             get => IsActive ? new(objTransform.Position.X, objTransform.Position.Y, Math.Abs(texture.width / FrameCount * objTransform.Scale.X), Math.Abs(texture.height * objTransform.Scale.Y)) : new(0f, 0f, 0f, 0f);
         }
+        internal override Vector2 Origin => new(texture.width / FrameCount, texture.height);
+
 
         public AnimatedSprite()
         {
